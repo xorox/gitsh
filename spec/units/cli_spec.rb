@@ -2,44 +2,18 @@ require 'spec_helper'
 require 'gitsh/cli'
 
 describe Gitsh::CLI do
-  it 'handles a SIGINT' do
-    env = stub('Environment', {
-      print: nil,
-      puts: nil,
-      repo_initialized?: false,
-      fetch: '',
-      :[] => nil
-    })
-    readline = stub('readline', {
-      :'completion_append_character=' => nil,
-      :'completion_proc=' => nil
-    })
-    readline.stubs(:readline).
-      returns('a').
-      then.raises(Interrupt).
-      then.returns('b').
-      then.raises(SystemExit)
+  describe '#run' do
+    it 'starts an interactive runner' do
+      runner = stub('runner', run: nil)
+      runner_factory = stub('InteractiveRunner', new: runner)
+      cli = described_class.new(
+        args: [],
+        interactive_runner_factory: runner_factory
+      )
 
-    interpreter = stub('interpreter', execute: nil)
-    interpreter_factory = stub('interpreter factory', new: interpreter)
-
-    history = stub('history', load: nil, save: nil)
-
-    cli = Gitsh::CLI.new(
-      args: [],
-      env: env,
-      readline: readline,
-      interpreter_factory: interpreter_factory,
-      history: history
-    )
-    begin
       cli.run
-    rescue SystemExit
-    end
 
-    expect(interpreter).to have_received(:execute).twice
-    expect(interpreter).to have_received(:execute).with('a')
-    expect(interpreter).to have_received(:execute).with('b')
-    expect(env).to have_received(:puts).once
+      expect(runner).to have_received(:run)
+    end
   end
 end
