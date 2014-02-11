@@ -19,7 +19,7 @@ describe '--version' do
 end
 
 describe 'Unexpected arguments' do
-  %w(--badger -x foobar).each do |argument|
+  ['--badger', '-x', ['foo', 'bar']].each do |argument|
     context "with the argument #{argument.inspect}" do
       it 'outputs a usage message and exits' do
         output = StringIO.new
@@ -27,7 +27,7 @@ describe 'Unexpected arguments' do
         env = Gitsh::Environment.new(output_stream: output, error_stream: error)
 
         runner = lambda do
-          Gitsh::CLI.new(args: [argument], env: env).run
+          Gitsh::CLI.new(args: [argument].flatten, env: env).run
         end
 
         expect(runner).to raise_error SystemExit

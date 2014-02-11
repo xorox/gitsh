@@ -9,6 +9,7 @@ module Gitsh
   class CLI
     EX_OK = 0
     EX_USAGE = 64
+    EX_NOINPUT = 66
 
     def initialize(opts={})
       interpreter_factory = opts.fetch(:interpreter_factory, Interpreter)
@@ -27,6 +28,8 @@ module Gitsh
       parse_arguments
       if unparsed_args.any?
         exit_with_usage_message
+      elsif script_file
+        run_script
       else
         run_interactive
       end
@@ -35,7 +38,7 @@ module Gitsh
     private
 
     attr_reader :env, :readline, :unparsed_args, :interpreter,
-      :interactive_runner_factory
+      :interactive_runner_factory, :script_file
 
     def run_interactive
       interactive_runner_factory.new(
@@ -45,6 +48,14 @@ module Gitsh
       ).run
     end
 
+    def run_script
+      commands = File.read(script_file).lines
+      commands.each { |cmd| interpreter.execute(cmd) }
+    rescue Errno::ENOENT
+      env.puts_error "gitsh: Error: No such file or directory - #{script_file}"
+      exit EX_NOINPUT
+    end
+
     def exit_with_usage_message
       env.puts_error option_parser.banner
       exit EX_USAGE
@@ -52,6 +63,7 @@ module Gitsh
 
     def parse_arguments
       option_parser.parse!(unparsed_args)
+      @script_file = unparsed_args.pop
     rescue OptionParser::InvalidOption => err
       unparsed_args.concat(err.args)
     end
