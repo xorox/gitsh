@@ -27,12 +27,16 @@ module Gitsh
     end
 
     rule(:unquoted_string) do
-      (variable | match(%q([^\s'"])).as(:literal)).repeat(1)
+      (
+        escaped_literal |
+        variable |
+        match(%q([^\s'"])).as(:literal)
+      ).repeat(1)
     end
 
     rule(:soft_string) do
       str('"') >> (
-        (str('\\') >> match('[$"\\\]').as(:literal)) |
+        escaped_literal |
         variable |
         (str('"').absent? >> any).as(:literal)
       ).repeat(0) >> str('"')
@@ -40,6 +44,10 @@ module Gitsh
 
     rule(:hard_string) do
       str("'") >> (str("'").absent? >> any).as(:literal).repeat(0) >> str("'")
+    end
+
+    rule(:escaped_literal) do
+      str('\\') >> match('[$"\\\ ]').as(:literal)
     end
 
     rule(:command_identifier) do

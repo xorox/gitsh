@@ -99,7 +99,7 @@ module Gitsh
         private
 
         def collection
-          Dir["#{matchable_input}*"]
+          Dir["#{matchable_input}*"].map { |path| escape(path) }
         end
 
         def suffix(path)
@@ -116,6 +116,10 @@ module Gitsh
           else
             File.expand_path(input)
           end
+        end
+
+        def escape(path)
+          path.gsub(' ', '\ ')
         end
       end
 

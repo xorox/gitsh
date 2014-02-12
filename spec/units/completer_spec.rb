@@ -57,6 +57,18 @@ describe Gitsh::Completer do
     expect(completer.call("#{path}/")).to include "#{first_regular_file(path)} "
   end
 
+  it 'completes paths containing spaces' do
+    in_a_temporary_directory do
+      write_file('some text file.txt', "Some text\n")
+      readline = stub('Readline', line_buffer: 'add ')
+      env = stub('Environment', repo_heads: %w( master ))
+      internal_command = stub('InternalCommand')
+      completer = Gitsh::Completer.new(readline, env, internal_command)
+
+      expect(completer.call('som')).to include 'some\ text\ file.txt '
+    end
+  end
+
   it 'completes heads starting with :' do
     readline = stub('Readline', line_buffer: 'push ')
     env = stub('Environment', repo_heads: %w( master hello-branch ))
