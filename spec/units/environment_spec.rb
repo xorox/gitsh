@@ -79,6 +79,21 @@ describe Gitsh::Environment do
     end
   end
 
+  describe '#input_stream' do
+    it 'returns $stdin by default' do
+      env = described_class.new
+
+      expect(env.input_stream).to eq $stdin
+    end
+
+    it 'can be overridden in the constructor' do
+      stream = stub
+      env = described_class.new(input_stream: stream)
+
+      expect(env.input_stream).to eq stream
+    end
+  end
+
   describe '#output_stream' do
     it 'returns $stdout by default' do
       env = described_class.new

@@ -3,6 +3,7 @@ require 'optparse'
 require 'gitsh/environment'
 require 'gitsh/interactive_runner'
 require 'gitsh/interpreter'
+require 'gitsh/script_runner'
 require 'gitsh/version'
 
 module Gitsh
@@ -22,6 +23,7 @@ module Gitsh
         :interactive_runner_factory,
         InteractiveRunner
       )
+      @script_runner_factory = opts.fetch(:script_runner_factory, ScriptRunner)
     end
 
     def run
@@ -29,16 +31,18 @@ module Gitsh
       if unparsed_args.any?
         exit_with_usage_message
       elsif script_file
-        run_script
-      else
+        run_script_file
+      elsif env.input_stream.tty?
         run_interactive
+      else
+        run_stdin
       end
     end
 
     private
 
     attr_reader :env, :readline, :unparsed_args, :interpreter,
-      :interactive_runner_factory, :script_file
+      :interactive_runner_factory, :script_runner_factory, :script_file
 
     def run_interactive
       interactive_runner_factory.new(
@@ -48,12 +52,19 @@ module Gitsh
       ).run
     end
 
-    def run_script
-      commands = File.read(script_file).lines
-      commands.each { |cmd| interpreter.execute(cmd) }
+    def run_script_file
+      File.open(script_file, 'r') { |file| run_script(file) }
     rescue Errno::ENOENT
       env.puts_error "gitsh: Error: No such file or directory - #{script_file}"
       exit EX_NOINPUT
+    end
+
+    def run_stdin
+      run_script(env.input_stream)
+    end
+
+    def run_script(script)
+      script_runner_factory.new(script: script, interpreter: interpreter).run
     end
 
     def exit_with_usage_message

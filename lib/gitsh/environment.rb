@@ -4,10 +4,11 @@ module Gitsh
   class Environment
     DEFAULT_GIT_COMMAND = '/usr/bin/env git'.freeze
 
-    attr_reader :output_stream, :error_stream
+    attr_reader :input_stream, :output_stream, :error_stream
     attr_accessor :git_command
 
     def initialize(options={})
+      @input_stream = options.fetch(:input_stream, $stdin)
       @output_stream = options.fetch(:output_stream, $stdout)
       @error_stream = options.fetch(:error_stream, $stderr)
       @git_command = DEFAULT_GIT_COMMAND
