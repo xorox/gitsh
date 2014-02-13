@@ -57,6 +57,9 @@ module Gitsh
     rescue Errno::ENOENT
       env.puts_error "gitsh: Error: No such file or directory - #{script_file}"
       exit EX_NOINPUT
+    rescue Errno::EACCES
+      env.puts_error "gitsh: Error: Permission denied - #{script_file}"
+      exit EX_NOINPUT
     end
 
     def run_stdin
