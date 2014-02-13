@@ -49,6 +49,12 @@ sh$</code></pre>
         sh$ gitsh --git $(which gh)
         gitsh% pull-request
 
+* Run Git scripts to automate repetitive tasks:
+
+        sh$ gitsh some_script_file
+        # or
+        sh$ cat some_script_file | gitsh
+
 ## Installing gitsh
 
 * On Mac OS X, via homebrew:

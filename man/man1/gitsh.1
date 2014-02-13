@@ -10,18 +10,24 @@
 .Op Fl -version
 .Op Fl h
 .Op Fl -git Ar CMD
+.Op Ar file
 .
 .Sh DESCRIPTION
 .Nm gitsh
 is a language for interacting with a
 .Xr git 1
 repository. It supports all git subcommands, custom aliases, and custom
-commands for interacting with the shell itself. Commands, path names,
-branch names, and tag names can all be completed using tab completion.
+commands for interacting with the shell itself.
 .Pp
-Quit by either typing
+By default, gitsh will start in interactive mode. Commands, path names, branch
+names, and tag names can all be completed using tab completion.  Quit by either
+typing
 .Ic :exit
 or sending an EOF character.
+.Pp
+Otherwise, commands can be provided via standard input, or the path to a
+.Ar file
+containing commands can be passed as an argument.
 .Pp
 It supports these options:
 .

@@ -84,7 +84,7 @@ module Gitsh
 
     def option_parser
       OptionParser.new do |opts|
-        opts.banner = 'usage: gitsh [--version] [-h | --help] [--git PATH]'
+        opts.banner = 'usage: gitsh [--version] [-h | --help] [--git PATH] [file]'
 
         opts.on('--git [COMMAND]', 'Use the specified git command') do |git_command|
           env.git_command = git_command

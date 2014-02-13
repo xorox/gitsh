@@ -33,7 +33,7 @@ describe 'Unexpected arguments' do
         expect(runner).to raise_error SystemExit
         expect(output.string).to be_empty
         expect(error.string.chomp).to eq(
-          'usage: gitsh [--version] [-h | --help] [--git PATH]'
+          'usage: gitsh [--version] [-h | --help] [--git PATH] [file]'
         )
       end
     end
