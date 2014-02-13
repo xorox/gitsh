@@ -8,7 +8,9 @@ module Gitsh
     end
 
     def execute(input)
-      build_command(input).execute
+      unless input =~ /^\s*$/
+        build_command(input).execute
+      end
     rescue Parslet::ParseFailed
       env.puts_error('gitsh: parse error')
     end

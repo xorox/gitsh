@@ -17,6 +17,21 @@ describe Gitsh::Interpreter do
       expect(parsed).to have_received(:execute)
     end
 
+    it 'does not attempt to transform blank commands' do
+      env = stub
+      parsed = stub(execute: nil)
+      parser = stub('Parser', parse_and_transform: parsed)
+      parser_factory = stub(new: parser)
+
+      interpreter = Gitsh::Interpreter.new(env, parser_factory: parser_factory)
+      interpreter.execute('')
+      interpreter.execute("\n")
+      interpreter.execute('  ')
+      interpreter.execute("\t\n")
+
+      expect(parser).to have_received(:parse_and_transform).never
+    end
+
     it 'handles parse errors' do
       env = stub('env', puts_error: nil)
       parser = stub('Parser')
