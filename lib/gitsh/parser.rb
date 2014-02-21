@@ -19,7 +19,7 @@ module Gitsh
     end
 
     rule(:shell_command) do
-      (str('!') >> match('\\w').repeat(1)).as(:shell_cmd)
+      str('!') >> match('\\w').repeat(1).as(:shell_cmd)
     end
 
     rule(:argument_list) do

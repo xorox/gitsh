@@ -1,6 +1,7 @@
 require 'parslet'
 require 'gitsh/git_command'
 require 'gitsh/internal_command'
+require 'gitsh/shell_command'
 
 module Gitsh
   class Transformer < Parslet::Transform
@@ -27,6 +28,14 @@ module Gitsh
 
     rule(internal_cmd: simple(:cmd), args: subtree(:args)) do |context|
       InternalCommand.new(context[:env], context[:cmd], context[:args])
+    end
+
+    rule(shell_cmd: simple(:cmd)) do |context|
+      ShellCommand.new(context[:env], context[:cmd])
+    end
+
+    rule(shell_cmd: simple(:cmd), args: subtree(:args)) do |context|
+      ShellCommand.new(context[:env], context[:cmd], context[:args])
     end
   end
 end
