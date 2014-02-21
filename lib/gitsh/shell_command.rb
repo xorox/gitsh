@@ -1,6 +1,6 @@
 module Gitsh
   class ShellCommand
-    def initialize(env, command, args=[])
+    def initialize(env, command, args = [])
       @env = env
       @command = command
       @args = args
@@ -8,7 +8,11 @@ module Gitsh
 
     def execute
       cmd = [command, args].flatten
-      pid = Process.spawn(*cmd, out: env.output_stream.to_i, err: env.error_stream.to_i)
+      pid = Process.spawn(
+        *cmd,
+        out: env.output_stream.to_i,
+        err: env.error_stream.to_i
+      )
       Process.wait(pid)
     end
 
