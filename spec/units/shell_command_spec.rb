@@ -3,14 +3,8 @@ require 'gitsh/shell_command'
 
 describe Gitsh::ShellCommand do
   describe '#excute' do
-    it 'can execute commands' do
-      shell = described_class.new(stub('Environment'), 'echo', [])
-      expect(shell).to respond_to(:execute)
-    end
-
     it 'spawns a process with the command and arguments' do
-      Process.stubs(:spawn)
-      Process.stubs(:wait)
+      Process.stubs(spawn: 1, wait: nil)
       env = stub('Environment', {
         output_stream: stub(to_i: 1),
         error_stream: stub(to_i: 2)

@@ -33,7 +33,7 @@ describe Gitsh::Parser do
     end
 
     it 'parses a shell command with no arguments' do
-      expect(parser).to parse(%q(!pwd)).as(shell_cmd: 'pwd')
+      expect(parser).to parse('!pwd').as(shell_cmd: 'pwd')
     end
 
     it 'parses a command with a long option argument' do
@@ -125,10 +125,10 @@ describe Gitsh::Parser do
     end
 
     it 'parses a shell command with arguments' do
-      expect(parser).to parse(%q(!echo "Hello World")).as(
+      expect(parser).to parse("!echo 'Hello World'").as(
         shell_cmd: 'echo',
         args: [
-          {arg: parser_literals('Hello World')}
+          { arg: parser_literals('Hello World') }
         ]
       )
     end

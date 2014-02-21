@@ -33,7 +33,7 @@ describe Gitsh::Transformer do
     end
 
     it 'transforms shell commands' do
-      output = transformer.apply({shell_cmd: '!pwd'}, evn: env)
+      output = transformer.apply({ shell_cmd: '!pwd' }, env: env)
       expect(output).to be_a Gitsh::ShellCommand
     end
 
