@@ -1,6 +1,5 @@
 module Gitsh
   class ShellCommand
-
     def initialize(env, command, args=[])
       @env = env
       @command = command
@@ -14,6 +13,7 @@ module Gitsh
     end
 
     private
+
     attr_reader :env, :command, :args
   end
 end
