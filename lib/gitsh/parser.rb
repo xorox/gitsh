@@ -15,11 +15,7 @@ module Gitsh
     root(:command)
 
     rule(:command) do
-      space.maybe >> (shell_command | command_identifier) >> argument_list.maybe >> space.maybe
-    end
-
-    rule(:shell_command) do
-      str('!') >> match('\\w').repeat(1).as(:shell_cmd)
+      space.maybe >> command_identifier >> argument_list.maybe >> space.maybe
     end
 
     rule(:argument_list) do
@@ -47,7 +43,9 @@ module Gitsh
     end
 
     rule(:command_identifier) do
-      (str(':') >> identifier.as(:internal_cmd)) | identifier.as(:git_cmd)
+      (str(':') >> identifier.as(:internal_cmd)) |
+      (str('!') >> identifier.as(:shell_cmd)) |
+      identifier.as(:git_cmd)
     end
 
     rule(:variable) do
