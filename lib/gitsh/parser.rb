@@ -15,7 +15,11 @@ module Gitsh
     root(:command)
 
     rule(:command) do
-      space.maybe >> command_identifier >> argument_list.maybe >> space.maybe
+      space.maybe >> (shell_command | command_identifier) >> argument_list.maybe >> space.maybe
+    end
+
+    rule(:shell_command) do
+      (str('!') >> match('\\w').repeat(1)).as(:shell_cmd)
     end
 
     rule(:argument_list) do
