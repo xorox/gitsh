@@ -14,7 +14,7 @@ module Gitsh
         err: env.error_stream.to_i
       )
       Process.wait(pid)
-      $?.success?
+      $? && $?.success?
     end
 
     private
